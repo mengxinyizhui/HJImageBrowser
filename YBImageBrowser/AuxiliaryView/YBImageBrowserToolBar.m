@@ -62,7 +62,8 @@ static CGFloat kToolBarDefaultsHeight = 50.0;
     
     self.frame = CGRectMake(0, 0, width, height);
     self.gradient.frame = self.bounds;
-    self.indexLabel.frame = CGRectMake(15 + hExtra, height - kToolBarDefaultsHeight, labelWidth, kToolBarDefaultsHeight);
+    self.indexLabel.frame = CGRectMake((width-labelWidth)/2, height - kToolBarDefaultsHeight, labelWidth, kToolBarDefaultsHeight);
+    self.indexLabel.textAlignment = NSTextAlignmentCenter;
     self.operationButton.frame = CGRectMake(width - buttonWidth - hExtra, height - kToolBarDefaultsHeight, buttonWidth, kToolBarDefaultsHeight);
 }
 

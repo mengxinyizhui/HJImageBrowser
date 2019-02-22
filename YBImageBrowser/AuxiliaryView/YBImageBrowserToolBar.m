@@ -20,6 +20,7 @@ static CGFloat kToolBarDefaultsHeight = 50.0;
 }
 @property (nonatomic, strong) UILabel *indexLabel;
 @property (nonatomic, strong) UIButton *operationButton;
+@property (nonatomic, strong) UIButton *cancleButton;
 @property (nonatomic, strong) CAGradientLayer *gradient;
 @end
 
@@ -35,6 +36,7 @@ static CGFloat kToolBarDefaultsHeight = 50.0;
     if (self) {
         [self.layer addSublayer:self.gradient];
         [self addSubview:self.indexLabel];
+        [self addSubview:self.cancleButton];
         [self addSubview:self.operationButton];
     }
     return self;
@@ -65,6 +67,9 @@ static CGFloat kToolBarDefaultsHeight = 50.0;
     self.indexLabel.frame = CGRectMake((width-labelWidth)/2, height - kToolBarDefaultsHeight, labelWidth, kToolBarDefaultsHeight);
     self.indexLabel.textAlignment = NSTextAlignmentCenter;
     self.operationButton.frame = CGRectMake(width - buttonWidth - hExtra, height - kToolBarDefaultsHeight, buttonWidth, kToolBarDefaultsHeight);
+    
+   self.cancleButton.frame = CGRectMake(10 + hExtra, self.bounds.size.height - kToolBarDefaultsHeight, kToolBarDefaultsHeight, kToolBarDefaultsHeight);
+  
 }
 
 - (void)yb_browserPageIndexChanged:(NSUInteger)pageIndex totalPage:(NSUInteger)totalPage data:(id<YBImageBrowserCellDataProtocol>)data {
@@ -147,6 +152,18 @@ static CGFloat kToolBarDefaultsHeight = 50.0;
     return _operationButton;
 }
 
+- (UIButton *)cancleButton {
+    if (!_cancleButton) {
+        _cancleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_cancleButton setImage:[YBIBFileManager getImageWithName:@"ybib_cancel"] forState:UIControlStateNormal];
+        [_cancleButton addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancleButton;
+}
+
+-(void)close{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"close" object:nil];
+}
 - (CAGradientLayer *)gradient {
     if (!_gradient) {
         _gradient = [CAGradientLayer layer];

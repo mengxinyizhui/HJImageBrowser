@@ -49,6 +49,7 @@
 
 - (void)dealloc {
     [self removeObserverForDataState];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"close" object:nil];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -59,6 +60,7 @@
         [self.contentView addSubview:self.mainContentView];
         [self.mainContentView addSubview:self.mainImageView];
         [self addGesture];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeImageBrower) name:@"close" object:nil];
     }
     return self;
 }
@@ -189,21 +191,23 @@
 #pragma mark - gesture
 
 - (void)addGesture {
-    UITapGestureRecognizer *tapSingle = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapSingle:)];
-    tapSingle.numberOfTapsRequired = 1;
+//    UITapGestureRecognizer *tapSingle = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapSingle:)];
+//    tapSingle.numberOfTapsRequired = 1;
     UITapGestureRecognizer *tapDouble = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToTapDouble:)];
     tapDouble.numberOfTapsRequired = 2;
-    [tapSingle requireGestureRecognizerToFail:tapDouble];
+//    [tapSingle requireGestureRecognizerToFail:tapDouble];
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(respondsToPan:)];
     pan.maximumNumberOfTouches = 1;
     pan.delegate = self;
-    [self.mainContentView addGestureRecognizer:tapSingle];
+//    [self.mainContentView addGestureRecognizer:tapSingle];
     [self.mainContentView addGestureRecognizer:tapDouble];
     [self.mainContentView addGestureRecognizer:pan];
 }
-
+-(void)closeImageBrower{
+     self.yb_browserDismissBlock();
+}
 - (void)respondsToTapSingle:(UITapGestureRecognizer *)tap {
-    self.yb_browserDismissBlock();
+   
 }
 
 - (void)respondsToTapDouble:(UITapGestureRecognizer *)tap {
@@ -214,7 +218,7 @@
     CGPoint point = [tap locationInView:zoomView];
     if (!CGRectContainsPoint(zoomView.bounds, point)) return;
     if (scrollView.zoomScale == scrollView.maximumZoomScale) {
-        [scrollView setZoomScale:1 animated:YES];
+        [scrollView setZoomScale:0.2 animated:YES];
     } else {
         [scrollView zoomToRect:CGRectMake(point.x, point.y, 1, 1) animated:YES];
     }
